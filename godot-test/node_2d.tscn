@@ -1,0 +1,203 @@
+[gd_scene load_steps=15 format=3 uid="uid://t7km8f2chs3q"]
+
+[ext_resource type="Script" path="res://main.gd" id="1_02ewr"]
+[ext_resource type="Texture2D" uid="uid://b5vj254ytaaed" path="res://bgs/parallax-forest-back-trees.png" id="1_2nuar"]
+[ext_resource type="PackedScene" uid="uid://b5640knjd8s6c" path="res://player.tscn" id="1_h6w2g"]
+[ext_resource type="Texture2D" uid="uid://bmie6tsu0d687" path="res://bgs/parallax-forest-middle-trees.png" id="2_act54"]
+[ext_resource type="Texture2D" uid="uid://bsu6p4qwse8vp" path="res://bgs/parallax-forest-lights.png" id="3_uoknd"]
+[ext_resource type="Texture2D" uid="uid://dvqrwyiqa3exn" path="res://bgs/parallax-forest-front-trees.png" id="5_aprka"]
+[ext_resource type="Script" path="res://camera.gd" id="5_mhsyb"]
+[ext_resource type="PackedScene" uid="uid://k3i0ay7y0my2" path="res://dialogue.tscn" id="8_j5x5h"]
+[ext_resource type="PackedScene" uid="uid://c32f1pcg6qgcc" path="res://main_enemy.tscn" id="8_kajef"]
+[ext_resource type="Script" path="res://events.gd" id="10_l1rhe"]
+
+[sub_resource type="Animation" id="Animation_bgn2m"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../entities/player:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(-28, 45)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../entities/MainEnemy:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(3200, 45)]
+}
+
+[sub_resource type="Animation" id="Animation_0lyyx"]
+resource_name = "opening"
+length = 14.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../entities/player:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 10),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(-28, 45), Vector2(3000, 45)]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../entities/player")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.0666667, 10),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"autorun"
+}, {
+"args": [],
+"method": &"autostop"
+}]
+}
+tracks/2/type = "method"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("../Background/dialogue")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(11.1333, 11.1667),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": ["hello", 1],
+"method": &"add_text"
+}, {
+"args": ["Press Z/A to attack, X/B to parry", 0],
+"method": &"add_text"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_hfwwt"]
+resource_name = "mainAttack"
+length = 6.0
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../entities/MainEnemy")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.0333333, 4, 5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"values": [{
+"args": [],
+"method": &"attack"
+}, {
+"args": [],
+"method": &"jump"
+}, {
+"args": [],
+"method": &"idle"
+}]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../entities/MainEnemy:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1, 2.4, 4, 4.6, 5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(3200, 45), Vector2(3200, 45), Vector2(3070, 45), Vector2(3070, 45), Vector2(3135, 0), Vector2(3200, 45)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_cpq35"]
+_data = {
+"RESET": SubResource("Animation_bgn2m"),
+"mainAttack": SubResource("Animation_hfwwt"),
+"opening": SubResource("Animation_0lyyx")
+}
+
+[node name="main_game" type="Node2D" groups=["Start level"]]
+position = Vector2(-2, -2)
+script = ExtResource("1_02ewr")
+
+[node name="Background" type="Node2D" parent="."]
+
+[node name="AbsoluteBG" type="Parallax2D" parent="Background"]
+scroll_scale = Vector2(0, 1)
+repeat_size = Vector2(272, 0)
+repeat_times = 7
+
+[node name="Sprite2D" type="Sprite2D" parent="Background/AbsoluteBG"]
+position = Vector2(8, 2)
+texture = ExtResource("1_2nuar")
+
+[node name="TreesBG" type="Parallax2D" parent="Background"]
+scroll_scale = Vector2(0.5, 1)
+scroll_offset = Vector2(272, 0)
+repeat_size = Vector2(272, 0)
+repeat_times = 7
+
+[node name="Sprite2D" type="Sprite2D" parent="Background/TreesBG"]
+position = Vector2(8, 2)
+texture = ExtResource("2_act54")
+
+[node name="LightBG" type="Parallax2D" parent="Background"]
+scroll_scale = Vector2(0, 1)
+repeat_size = Vector2(272, 0)
+repeat_times = 7
+
+[node name="Sprite2D" type="Sprite2D" parent="Background/LightBG"]
+position = Vector2(8, 2)
+texture = ExtResource("3_uoknd")
+
+[node name="TreesFG" type="Parallax2D" parent="Background"]
+z_index = 50
+scroll_scale = Vector2(1.2, 1)
+repeat_size = Vector2(272, 0)
+repeat_times = 7
+
+[node name="Sprite2D" type="Sprite2D" parent="Background/TreesFG"]
+position = Vector2(8, 2)
+texture = ExtResource("5_aprka")
+
+[node name="dialogue" parent="Background" instance=ExtResource("8_j5x5h")]
+
+[node name="Camera" type="Camera2D" parent="."]
+position = Vector2(40, 1)
+zoom = Vector2(4.2, 4.2)
+drag_vertical_enabled = true
+drag_top_margin = 1.0
+script = ExtResource("5_mhsyb")
+player = NodePath("../entities/player")
+
+[node name="entities" type="Node2D" parent="."]
+
+[node name="player" parent="entities" instance=ExtResource("1_h6w2g")]
+position = Vector2(-28, 45)
+
+[node name="MainEnemy" parent="entities" instance=ExtResource("8_kajef")]
+position = Vector2(3200, 45)
+
+[node name="main_events" type="Node2D" parent="."]
+
+[node name="events" type="AnimationPlayer" parent="main_events"]
+libraries = {
+"": SubResource("AnimationLibrary_cpq35")
+}
+autoplay = "opening"
+script = ExtResource("10_l1rhe")
